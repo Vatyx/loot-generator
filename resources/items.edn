@@ -1,0 +1,83 @@
+; Keywords
+; :name - name of the object so it can be referred to bv other objects
+; :items - the elements of a table to be rolled
+; :external - specified externally and is passed into the roll function
+; #table - a rollable table
+
+; Concepts
+; - Overrides
+; - Archetypes
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+{:name   :item
+ :object :item-table}
+
+#table{:name  :item-table
+       :items {:inventory-item 1
+               :power-up       1
+               :money          1}}
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+{:name          :inventory-item
+ :powerlevel    :external
+ :rarity        :rarity-table
+ :augmentations :augmentation-table
+ :object        :inventory-item-table}
+
+#table{:name  :inventory-item-table
+       :items {:ranged-weapon 1
+               :melee-weapon  1
+               :ability       1
+               :tower         1}}
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+#table{:name  :rarity-table
+       :items {:common    1
+               :uncommon  1
+               :rare      1
+               :epic      1
+               :legendary 1}}
+
+
+{:name           :ranged-weapon
+ :archetype      :weapon-archetype-table
+ :firing-mode    :firing-mode-table
+ :reload-type    :reload-mode-table
+ :ammo-type      :ammo-type-table
+ :pellet-pattern :pellet-pattern-table
+ :projectile     :projectile-table
+ :color          :color-scheme-table}
+
+
+#archetype{:name      :pistol
+           :overrides {:firing-mode-table  {:firing-mode/single 10}
+                       :firing-mode/single {:fire-rate {:distribution :uniform}}}}
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+#table{:name  :firing-mode-table
+       :items {:firing-mode/single 1
+               :firing-mode/auto   1
+               :firing-mode/burst  1}}
+
+{:name      :firing-mode/single
+ :fire-rate {:type         :float
+             :distribution :gaussian}}
+
+{:name      :firing-mode/auto
+ :fire-rate {:type         :float
+             :distribution {:type :gaussian
+                            :mean 400
+                            :sd 300
+                            :overrides {}}}}
+
+{:name                     :firing-mode/burst
+ :fire-rate-between-bursts {:type         :float
+                            :distribution :gaussian}
+ :fire-rate-within-bursts  {:type         :float
+                            :distribution :gaussian}}
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
